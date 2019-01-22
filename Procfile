@@ -1,0 +1,1 @@
+web: gunicorn proveedorde.wsgi --log-file -
