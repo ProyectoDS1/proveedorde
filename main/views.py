@@ -9,12 +9,23 @@ from main.models import Subscription
 
 
 def check_left(request):
+    print()
     try:
-        subscription = Subscription.objects.get(phone=request.GET.get("phone"))
-        if subscription.money_left >= decimal.Decimal(request.GET.get("value")):
-            subscription.money_left -= decimal.Decimal(request.GET.get("value"))
+        phone = request.GET.get("phone")
+        value = request.GET.get("value")
+
+        print(f"Received request of {phone} for ${value}")
+
+        subscription = Subscription.objects.get(phone=phone)
+
+        print(f"{phone} has ${subscription.money_left} left")
+        if subscription.money_left >= decimal.Decimal(value):
+            print("Request accepted!")
+            subscription.money_left -= decimal.Decimal(value)
             subscription.save()
             return HttpResponse()
-        raise Http404
+
     except Subscription.DoesNotExist:
-        raise Http404
+        pass
+    print("Request denied!")
+    raise Http404
